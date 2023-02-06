@@ -259,7 +259,7 @@ function App() {
             href="https://www.turkiye.gov.tr/afet-ve-acil-durum-yonetimi-acil-toplanma-alani-sorgulama"
             target="_blank"
             rel="noreferrer"
-            className="text-slate-200 text-center text-base hover:text-slate-500 transition"
+            className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
           >
             Acil Durum Toplanma Alanları
           </a>
