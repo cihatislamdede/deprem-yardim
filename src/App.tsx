@@ -55,6 +55,9 @@ function App() {
     fetch(URL)
       .then((response) => response.json())
       .then((data) => {
+        data.sort((a: Entry, b: Entry) => {
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        });
         setEntries(data);
       })
       .catch((error) => {
