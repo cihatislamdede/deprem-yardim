@@ -144,7 +144,11 @@ function App() {
           Gönder
         </button>
       </div>
-      <div className="flex flex-col items-center mt-4">
+      <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
+      <p className="text-slate-200 font-semibold text-center mt-2 text-2xl">
+        Gönderilen Yardım Talepleri
+      </p>
+      <div className="flex flex-col items-center">
         <div className="flex flex-row items-center">
           <div className="flex flex-col">
             <label
