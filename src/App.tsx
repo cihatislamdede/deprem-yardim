@@ -7,6 +7,7 @@ type Entry = {
   city: string;
   district: string;
   number?: string;
+  createdAt: string; // 2023-02-06T11:18:39.775Z
 };
 
 function App() {
@@ -213,8 +214,20 @@ function App() {
                   <p className="mt-2 text-sm font-bold text-slate-300">
                     {entry.city} / {entry.district}
                   </p>
+                  {entry.number && (
+                    <p className="mt-2 text-sm font-bold text-slate-400">
+                      Tel: {entry.number}
+                    </p>
+                  )}
                   <p className="mt-2 text-sm font-bold text-slate-400">
-                    {entry.number}
+                    {new Date(entry.createdAt).toLocaleString("tr-TR", {
+                      timeZone: "Europe/Istanbul",
+                      hour: "numeric",
+                      minute: "numeric",
+                      day: "numeric",
+                      month: "numeric",
+                      year: "numeric",
+                    })}
                   </p>
                 </div>
               </div>
