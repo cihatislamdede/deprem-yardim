@@ -48,49 +48,15 @@ function App() {
 
   // get entries from backend
   useEffect(() => {
-    setEntries([
-      {
-        id: 1,
-        description:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        city: "Adana",
-        district: "Aladağ",
-        number: "5321234567",
-      },
-      {
-        id: 2,
-        description:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        city: "Adana",
-        district: "Aladağ",
-        number: "5321234567",
-      },
-      {
-        id: 3,
-        description:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        city: "Gaziantep",
-        district: "Karkamış",
-        number: "5321234567",
-      },
-    ]);
-    // const URL = "https://depremyardim.herokuapp.com/api/v1/requests";
-    // fetch(URL)
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     setEntries([
-    //       {
-    //         description: "test",
-    //         city: "Adana",
-    //         district: "Aladağ",
-    //         number: "5321234567",
-    //       }
-
-    //     ]);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error:", error);
-    //   });
+    const URL = "https://depremyardim.herokuapp.com/api/v1/requests";
+    fetch(URL)
+      .then((response) => response.json())
+      .then((data) => {
+        setEntries(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   }, []);
 
   return (
@@ -166,9 +132,16 @@ function App() {
       </form>
       <div className="flex flex-col items-center mt-4">
         <div className="flex flex-row items-center">
+          <div className="flex flex-col">
+          <label
+            htmlFor="cities"
+            className="text-slate-200 text-center mt-2 text-base"
+          >
+            İl
+          </label>
           <select
             id="cities"
-            className=" w-32 h-10 rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
+            className=" w-32 mr-2 h-10 rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
             value={filter.city}
             onChange={(e) => setFilter({ ...filter, city: e.target.value })}
           >
@@ -179,6 +152,14 @@ function App() {
               </option>
             ))}
           </select>
+          </div>
+          <div className="flex flex-col">
+          <label
+            htmlFor="districts"
+            className="text-slate-200 text-center mt-2 text-base"
+          >
+            İlçe
+          </label>
           <select
             id="districts"
             className=" w-32 h-10 rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
@@ -192,36 +173,43 @@ function App() {
               </option>
             ))}
           </select>
+          </div>
         </div>
       </div>
       <div className="grid gap-6 row-gap-5 px-16 py-6 lg:grid-cols-5 sm:row-gap-6 sm:grid-cols-3">
         {entries.length > 0 &&
-          entries.filter((entry) => {
-            if (filter.city === "" && filter.district === "") {
-              return true;
-            } else if (filter.city !== "" && filter.district === "") {
-              return entry.city === filter.city;
-            } else if (filter.city !== "" && filter.district !== "") {
-              return entry.city === filter.city && entry.district === filter.district;
-            }
-          }).slice((paging - 1) * PAGE_SIZE, paging * PAGE_SIZE).map((entry) => (
-            <div
-            className="relative overflow-hidden transition duration-200 transform rounded shadow-lg hover:-translate-y-2 hover:shadow-2x"
-            key={entry.id}
-          >
-            <div className="absolute inset-0 flex items-center justify-center w-full h-full bg-gradient-to-r from-yellow-400 to-red-500 opacity-75"></div>
-            <div className="relative px-4 py-4 bg-black">
-              <p className="text-sm font-medium text-white">
-                {entry.description}
-              </p>
-              <p className="mt-2 text-sm font-bold text-slate-300">
-                {entry.city} / {entry.district}
-              </p>
-              <p className="mt-2 text-sm font-bold text-slate-400">
-                {entry.number}
-              </p>
-            </div>
-          </div>
+          entries
+            .filter((entry) => {
+              if (filter.city === "" && filter.district === "") {
+                return true;
+              } else if (filter.city !== "" && filter.district === "") {
+                return entry.city === filter.city;
+              } else if (filter.city !== "" && filter.district !== "") {
+                return (
+                  entry.city === filter.city &&
+                  entry.district === filter.district
+                );
+              }
+            })
+            .slice((paging - 1) * PAGE_SIZE, paging * PAGE_SIZE)
+            .map((entry) => (
+              <div
+                className="relative overflow-hidden transition duration-200 transform rounded shadow-lg hover:-translate-y-2 hover:shadow-2x"
+                key={entry.id}
+              >
+                <div className="absolute inset-0 flex items-center justify-center w-full h-full bg-gradient-to-r from-yellow-400 to-red-500 opacity-75"></div>
+                <div className="relative px-4 py-4 bg-black">
+                  <p className="text-sm font-medium text-white">
+                    {entry.description}
+                  </p>
+                  <p className="mt-2 text-sm font-bold text-slate-300">
+                    {entry.city} / {entry.district}
+                  </p>
+                  <p className="mt-2 text-sm font-bold text-slate-400">
+                    {entry.number}
+                  </p>
+                </div>
+              </div>
             ))}
       </div>
       <div className="flex flex-row justify-center mb-4">
