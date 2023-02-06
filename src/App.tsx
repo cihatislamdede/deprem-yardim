@@ -18,6 +18,27 @@ function App() {
   const [filter, setFilter] = useState({ city: "", district: "" });
   const [number, setNumber] = useState("");
 
+  async function useLocation(){
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+      console.log("Tarayıcınız konum bilgisini desteklemiyor");
+    }
+  };
+
+  async function success(position: GeolocationPosition){
+    const { latitude, longitude } = position.coords;
+    const URL = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`;
+    const response = await fetch(URL);
+    const data = await response.json();
+    const { address } = data;
+    setSelectedCity(address.province);
+    setSelectedDistrict(address.town);
+  }
+  async function error(){
+    alert("Konum bilgisi alınamadı. Konum izinlerinizi kontrol edin.");
+  }
+
   async function submitData() {
     const data = {
       description,
@@ -145,6 +166,9 @@ function App() {
           maxLength={11}
           onChange={(e) => setNumber(e.target.value)}
         />
+        <button onClick={useLocation} className="w-40 h-10 font-bold rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black mt-4  placeholder:text-center placeholder:text-slate-200 hover:scale-95 transition">
+          Konumumu kullan
+        </button>
         <button
           className="w-40 h-10 font-bold rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black mt-4  placeholder:text-center placeholder:text-slate-200 hover:scale-95 transition"
           onClick={submitData}
