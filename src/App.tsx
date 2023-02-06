@@ -69,7 +69,7 @@ function App() {
       </header>
       <div className="flex flex-col items-center mt-4">
         <p className="text-slate-400 text-center my-2 text-base">
-          Deprem ile ilgili yardım taleplerinizi bu sayfadan gönderebilirsiniz.
+          Deprem ile ilgili yardım taleplerinizi gönderebilirsiniz.
         </p>
         <textarea
           className="w-64 h-24 rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
