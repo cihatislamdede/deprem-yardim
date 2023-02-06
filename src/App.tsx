@@ -17,6 +17,7 @@ function App() {
   const [selectedDistrict, setSelectedDistrict] = useState<string>("Saimbeyli");
   const [filter, setFilter] = useState({ city: "", district: "" });
   const [number, setNumber] = useState("");
+  const [cityEntryCountMap, setCityEntryCountMap] = useState<Map<String,Number>>()
 
   async function submitData() {
     const data = {
@@ -48,6 +49,23 @@ function App() {
     }
   }
 
+  const countAndSetEntryCountsForCities = (entries:Entry[]) => {
+
+    const countMap = new Map();
+    ILLER.forEach(il => countMap.set(il.text,0));
+    entries.forEach((entry) => {
+      const city = entry.city;
+      if (countMap.get(city) === undefined) {
+        countMap.set(city,0);
+      }else {
+        countMap.set(city,countMap.get(city) + 1);
+      }
+    })
+
+    ILLER.sort( (il1,il2) => countMap.get(il1.text) > countMap.get(il2.text) ? -1 : 1)
+    setCityEntryCountMap(countMap);
+  }
+
   // get entries from backend
   useEffect(() => {
     const URL = "https://deprem.noonlordhost.com/";
@@ -60,6 +78,7 @@ function App() {
           );
         });
         setEntries(data);
+        countAndSetEntryCountsForCities(data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -199,7 +218,7 @@ function App() {
               <option value="">Tümü</option>
               {ILLER.map((il) => (
                 <option key={il.key} value={il.text}>
-                  {il.text}
+                  {il.text + " (" +  cityEntryCountMap?.get(il.text) + ")"}
                 </option>
               ))}
             </select>
