@@ -39,6 +39,7 @@ function App() {
       if (response.ok) {
         setDescription("");
         setNumber("");
+        data.createdAt = new Date().toISOString();
         setEntries([...entries, data]);
         alert("Mesajınız başarıyla gönderildi!");
       } else {
