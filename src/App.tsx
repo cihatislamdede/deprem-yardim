@@ -57,7 +57,9 @@ function App() {
       .then((response) => response.json())
       .then((data) => {
         data.sort((a: Entry, b: Entry) => {
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
         });
         setEntries(data);
       })
@@ -190,7 +192,7 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="grid gap-6 row-gap-5 px-16 py-6 lg:grid-cols-5 sm:row-gap-6 sm:grid-cols-3">
+      <div className="grid gap-2 row-gap-5 px-16 py-6 lg:grid-cols-5 sm:row-gap-6 sm:grid-cols-3">
         {entries.length > 0 &&
           entries
             .filter((entry) => {
@@ -208,10 +210,10 @@ function App() {
             .slice((paging - 1) * PAGE_SIZE, paging * PAGE_SIZE)
             .map((entry) => (
               <div
-                className="relative overflow-hidden transition duration-200 transform rounded shadow-lg hover:-translate-y-2 hover:shadow-2x"
+                className="relative overflow-hidden transition duration-200 transform rounded-xl shadow-lg hover:-translate-y-2 hover:shadow-2x"
                 key={entry.id}
               >
-                <div className="relative px-4 py-4 bg-black">
+                <div className="relative px-4 py-4 bg-black hover:bg-gray-900 transition-all">
                   <p className="text-sm font-medium text-white">
                     {entry.description}
                   </p>
