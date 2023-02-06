@@ -71,7 +71,17 @@ function App() {
       <header className="text-center text-slate-200 text-5xl mt-4">
         DEPREM YARDIM
       </header>
-      <div className="flex flex-col items-center mt-4">
+      <p className="text-slate-200 text-center text-base">
+        <a
+          href="https://github.com/cihatislamdede/deprem-yardim"
+          target="_blank"
+          rel="noreferrer"
+          className="text-slate-400 text-center text-xs hover:text-slate-500 transition underline"
+        >
+          Bu Proje Açık Kaynaktır
+        </a>
+      </p>
+      <div className="flex flex-col items-center mt-2">
         <p className="text-slate-400 text-center my-2 text-base">
           Deprem ile ilgili yardım taleplerinizi gönderebilirsiniz.
         </p>
@@ -143,24 +153,31 @@ function App() {
         </button>
       </div>
       <div className="text-slate-200 text-base flex flex-row gap-x-6 justify-center mt-4">
-          <a
-            href="https://www.turkiye.gov.tr/afet-ve-acil-durum-yonetimi-acil-toplanma-alani-sorgulama"
-            target="_blank"
-            rel="noreferrer"
-            className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
-          >
-            Acil Durum<br/>Toplanma Alanları
-          </a>
-          <a
-            href="https://www.afad.gov.tr/depremkampanyasi2"
-            target="_blank"
-            rel="noreferrer"
-            className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
-          >
-            AFAD Bağış
-          </a>
-        </div>
-      <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700"/>
+        <a
+          href="https://www.turkiye.gov.tr/afet-ve-acil-durum-yonetimi-acil-toplanma-alani-sorgulama"
+          target="_blank"
+          rel="noreferrer"
+          className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
+        >
+          Acil Durum
+          <br />
+          Toplanma Alanları
+        </a>
+        <a
+          href="https://www.afad.gov.tr/depremkampanyasi2"
+          target="_blank"
+          rel="noreferrer"
+          className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
+        >
+          AFAD Bağış
+        </a>
+      </div>
+      <p className="text-center text-slate-500/50 text-sm mt-1">
+        Gönderilen yardım taleplerinin doğruluğundan sorumlu değiliz.
+        <br />
+        Lütfen sadece <span className="font-bold text-slate-500/60">doğruluğuna</span> emin olduğunuz yardım taleplerini gönderiniz.
+      </p>
+      <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
       <p className="text-slate-200 font-semibold text-center text-2xl">
         Gönderilen Yardım Talepleri
       </p>
