@@ -152,12 +152,12 @@ function App() {
             Acil Durum<br/>Toplanma Alanları
           </a>
           <a
-            href="https://docs.google.com/forms/d/e/1FAIpQLScgi1Os6c_isHMP0bSK1gAFRexmO2wm8tU_4nkrjgwrqqoajA/viewform"
+            href="https://www.afad.gov.tr/depremkampanyasi2"
             target="_blank"
             rel="noreferrer"
             className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
           >
-            Kızılay Enkaz<br/>Bildirim Formu
+            AFAD Bağış
           </a>
         </div>
       <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700"/>
