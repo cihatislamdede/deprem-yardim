@@ -144,8 +144,26 @@ function App() {
           Gönder
         </button>
       </div>
-      <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
-      <p className="text-slate-200 font-semibold text-center mt-2 text-2xl">
+      <div className="text-slate-200 text-base flex flex-row gap-x-4 justify-center mt-4">
+          <a
+            href="https://www.turkiye.gov.tr/afet-ve-acil-durum-yonetimi-acil-toplanma-alani-sorgulama"
+            target="_blank"
+            rel="noreferrer"
+            className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
+          >
+            Acil Durum Toplanma Alanları
+          </a>
+          <a
+            href="https://www.afad.gov.tr/depremkampanyasi2"
+            target="_blank"
+            rel="noreferrer"
+            className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
+          >
+            AFAD Bağış
+          </a>
+        </div>
+      <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700"/>
+      <p className="text-slate-200 font-semibold text-center text-2xl">
         Gönderilen Yardım Talepleri
       </p>
       <div className="flex flex-col items-center">
@@ -263,18 +281,6 @@ function App() {
             ))
           : null}
       </div>
-      <footer className="text-secondary-blue w-full bottom-0">
-        <p className="text-slate-200 text-center text-base">
-          <a
-            href="https://www.turkiye.gov.tr/afet-ve-acil-durum-yonetimi-acil-toplanma-alani-sorgulama"
-            target="_blank"
-            rel="noreferrer"
-            className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
-          >
-            Acil Durum Toplanma Alanları
-          </a>
-        </p>
-      </footer>
     </div>
   );
 }
