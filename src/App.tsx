@@ -108,6 +108,7 @@ function App() {
           value={selectedDistrict}
           onChange={(e) => setSelectedDistrict(e.target.value)}
         >
+          <option value="">Merkez</option>
           {ILCELER.filter((ilce) => ilce.il == selectedCity).map((ilce) => (
             <option key={ilce.ilce_id} value={ilce.ilce}>
               {ilce.ilce}
