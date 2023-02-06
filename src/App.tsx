@@ -151,7 +151,7 @@ function App() {
             rel="noreferrer"
             className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
           >
-            Acil Durum Toplanma Alanları
+            Acil Durum<br/>Toplanma Alanları
           </a>
           <a
             href="https://www.afad.gov.tr/depremkampanyasi2"
@@ -160,6 +160,14 @@ function App() {
             className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
           >
             AFAD Bağış
+          </a>
+          <a
+            href="https://www.google.com/maps/d/u/0/viewer?mid=1aQ0TJi4q_46XAZiSLggkbTjPzLGkTzQ&hl=tr&ll=37.73124638380327%2C39.06955589456377&z=8"
+            target="_blank"
+            rel="noreferrer"
+            className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
+          >
+            Güvenli Bölgeler
           </a>
         </div>
       <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700"/>
