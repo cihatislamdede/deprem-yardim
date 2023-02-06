@@ -7,7 +7,7 @@ type Entry = {
   city: string;
   district: string;
   number?: string;
-  createdAt: string; // 2023-02-06T11:18:39.775Z
+  createdAt: string;
 };
 
 function App() {
