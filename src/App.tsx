@@ -36,13 +36,9 @@ function App() {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log("Success:", data);
           alert("Mesajınız başarıyla gönderildi!");
         })
-        .catch((error) => {
-          console.error("Error:", error);
-          alert("Mesajınız gönderilirken bir hata oluştu!");
-        });
+        .catch((error) => {});
     } else {
       alert("Lütfen tüm alanları doldurunuz");
     }
@@ -225,6 +221,7 @@ function App() {
             ).map((page) => (
               <button
                 key={page}
+                onClick={() => setPaging(page)}
                 className={`rounded-md border-2 w-12 h-12 border-slate-800 bg-slate-50  font-semibold text-slate-800 transition-all p-2 m-2 ${
                   paging === page
                     ? "bg-slate-300"
