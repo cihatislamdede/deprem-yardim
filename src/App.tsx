@@ -240,18 +240,18 @@ function App() {
             ))
           : null}
       </div>
-      {/* <footer className="text-secondary-blue w-full bottom-0 fixed">
-        <p className="text-slate-200 text-center mt-2 text-base">
+      <footer className="text-secondary-blue w-full bottom-0">
+        <p className="text-slate-200 text-center text-base">
           <a
-            href="https://github.com/cihatislamdede/deprem-yardim"
+            href="https://www.turkiye.gov.tr/afet-ve-acil-durum-yonetimi-acil-toplanma-alani-sorgulama"
             target="_blank"
             rel="noreferrer"
-            className="text-slate-200 text-center mt-2 text-base"
+            className="text-slate-200 text-center text-base hover:text-slate-500 transition"
           >
-            Github
+            Acil Durum Toplanma Alanları
           </a>
         </p>
-      </footer> */}
+      </footer>
     </div>
   );
 }
