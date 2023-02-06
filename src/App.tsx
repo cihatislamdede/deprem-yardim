@@ -205,7 +205,6 @@ function App() {
                 className="relative overflow-hidden transition duration-200 transform rounded shadow-lg hover:-translate-y-2 hover:shadow-2x"
                 key={entry.id}
               >
-                <div className="absolute inset-0 flex items-center justify-center w-full h-full bg-gradient-to-r from-yellow-400 to-red-500 opacity-75"></div>
                 <div className="relative px-4 py-4 bg-black">
                   <p className="text-sm font-medium text-white">
                     {entry.description}
