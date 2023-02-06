@@ -173,9 +173,9 @@ function App() {
         </a>
       </div>
       <p className="text-center text-slate-500/50 text-sm mt-1">
-        Gönderilen yardım taleplerinin doğruluğundan sorumlu değiliz.
+        Gönderilen yardım taleplerinin doğruluğundan sorumlu değiliz.Lütfen sadece <span className="font-bold text-slate-500/60">doğruluğuna</span> emin olduğunuz yardım taleplerini gönderiniz. 
         <br />
-        Lütfen sadece <span className="font-bold text-slate-500/60">doğruluğuna</span> emin olduğunuz yardım taleplerini gönderiniz.
+        Deprem Yardım hiçbir kişisel verileri toplamaz, yardım edecek ve yardım bekleyen kişiler arasında köprü olmayı amaçlar.
       </p>
       <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
       <p className="text-slate-200 font-semibold text-center text-2xl">
