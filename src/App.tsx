@@ -27,7 +27,7 @@ function App() {
       number,
     } as Entry;
     if (data.city && data.district && data.description) {
-      fetch("https://depremyardim.herokuapp.com/api/v1/requests", {
+      fetch("https://deprem.noonlordhost.com/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,9 +37,11 @@ function App() {
         .then((response) => response.json())
         .then((data) => {
           console.log("Success:", data);
+          alert("Mesajınız başarıyla gönderildi!");
         })
         .catch((error) => {
           console.error("Error:", error);
+          alert("Mesajınız gönderilirken bir hata oluştu!");
         });
     } else {
       alert("Lütfen tüm alanları doldurunuz");
@@ -48,7 +50,7 @@ function App() {
 
   // get entries from backend
   useEffect(() => {
-    const URL = "https://depremyardim.herokuapp.com/api/v1/requests";
+    const URL = "https://deprem.noonlordhost.com/";
     fetch(URL)
       .then((response) => response.json())
       .then((data) => {
@@ -133,46 +135,48 @@ function App() {
       <div className="flex flex-col items-center mt-4">
         <div className="flex flex-row items-center">
           <div className="flex flex-col">
-          <label
-            htmlFor="cities"
-            className="text-slate-200 text-center mt-2 text-base"
-          >
-            İl
-          </label>
-          <select
-            id="cities"
-            className=" w-32 mr-2 h-10 rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
-            value={filter.city}
-            onChange={(e) => setFilter({ ...filter, city: e.target.value })}
-          >
-            <option value="">Tümü</option>
-            {ILLER.map((il) => (
-              <option key={il.key} value={il.text}>
-                {il.text}
-              </option>
-            ))}
-          </select>
+            <label
+              htmlFor="cities"
+              className="text-slate-200 text-center mt-2 text-base"
+            >
+              İl
+            </label>
+            <select
+              id="cities"
+              className=" w-32 mr-2 h-10 rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
+              value={filter.city}
+              onChange={(e) => setFilter({ ...filter, city: e.target.value })}
+            >
+              <option value="">Tümü</option>
+              {ILLER.map((il) => (
+                <option key={il.key} value={il.text}>
+                  {il.text}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="flex flex-col">
-          <label
-            htmlFor="districts"
-            className="text-slate-200 text-center mt-2 text-base"
-          >
-            İlçe
-          </label>
-          <select
-            id="districts"
-            className=" w-32 h-10 rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
-            value={filter.district}
-            onChange={(e) => setFilter({ ...filter, district: e.target.value })}
-          >
-            <option value="">Tümü</option>
-            {ILCELER.filter((ilce) => ilce.il == filter.city).map((ilce) => (
-              <option key={ilce.ilce_id} value={ilce.ilce}>
-                {ilce.ilce}
-              </option>
-            ))}
-          </select>
+            <label
+              htmlFor="districts"
+              className="text-slate-200 text-center mt-2 text-base"
+            >
+              İlçe
+            </label>
+            <select
+              id="districts"
+              className=" w-32 h-10 rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
+              value={filter.district}
+              onChange={(e) =>
+                setFilter({ ...filter, district: e.target.value })
+              }
+            >
+              <option value="">Tümü</option>
+              {ILCELER.filter((ilce) => ilce.il == filter.city).map((ilce) => (
+                <option key={ilce.ilce_id} value={ilce.ilce}>
+                  {ilce.ilce}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
