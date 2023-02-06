@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ILCELER, ILLER, PAGE_SIZE } from "./constants";
+import { ILCELER, ILLER } from "./constants";
 
 type Entry = {
   id: number | string;
@@ -17,8 +17,6 @@ function App() {
   const [selectedDistrict, setSelectedDistrict] = useState<string>("Saimbeyli");
   const [filter, setFilter] = useState({ city: "", district: "" });
   const [number, setNumber] = useState("");
-
-  const [paging, setPaging] = useState(1);
 
   async function submitData() {
     const data = {
@@ -144,7 +142,7 @@ function App() {
           Gönder
         </button>
       </div>
-      <div className="text-slate-200 text-base flex flex-row gap-x-4 justify-center mt-4">
+      <div className="text-slate-200 text-base flex flex-row gap-x-6 justify-center mt-4">
           <a
             href="https://www.turkiye.gov.tr/afet-ve-acil-durum-yonetimi-acil-toplanma-alani-sorgulama"
             target="_blank"
@@ -154,20 +152,12 @@ function App() {
             Acil Durum<br/>Toplanma Alanları
           </a>
           <a
-            href="https://www.afad.gov.tr/depremkampanyasi2"
+            href="https://docs.google.com/forms/d/e/1FAIpQLScgi1Os6c_isHMP0bSK1gAFRexmO2wm8tU_4nkrjgwrqqoajA/viewform"
             target="_blank"
             rel="noreferrer"
             className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
           >
-            AFAD Bağış
-          </a>
-          <a
-            href="https://www.google.com/maps/d/u/0/viewer?mid=1aQ0TJi4q_46XAZiSLggkbTjPzLGkTzQ&hl=tr&ll=37.73124638380327%2C39.06955589456377&z=8"
-            target="_blank"
-            rel="noreferrer"
-            className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
-          >
-            Güvenli Bölgeler
+            Kızılay Enkaz<br/>Bildirim Formu
           </a>
         </div>
       <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700"/>
@@ -237,7 +227,6 @@ function App() {
                 );
               }
             })
-            .slice((paging - 1) * PAGE_SIZE, paging * PAGE_SIZE)
             .map((entry) => (
               <div
                 className="relative overflow-hidden transition duration-200 transform rounded-xl shadow-lg hover:-translate-y-2 hover:shadow-2x"
@@ -268,26 +257,6 @@ function App() {
                 </div>
               </div>
             ))}
-      </div>
-      <div className="flex flex-row justify-center mb-4">
-        {entries.length > 0
-          ? Array.from(
-              { length: Math.ceil(entries.length / PAGE_SIZE) },
-              (v, i) => i + 1
-            ).map((page) => (
-              <button
-                key={page}
-                onClick={() => setPaging(page)}
-                className={`rounded-md border-2 w-12 h-12 border-slate-800 bg-slate-50  font-semibold text-slate-800 transition-all p-2 m-2 ${
-                  paging === page
-                    ? "bg-slate-300"
-                    : "hover:bg-slate-400 transition-all"
-                }`}
-              >
-                {page}
-              </button>
-            ))
-          : null}
       </div>
     </div>
   );

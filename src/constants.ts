@@ -1,4 +1,3 @@
-export const PAGE_SIZE = 50;
 
 export const ILLER = [
   { key: 1, text: "Adana" },
