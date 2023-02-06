@@ -19,7 +19,7 @@ function App() {
 
   const [paging, setPaging] = useState(1);
 
-  function submitData() {
+  async function submitData() {
     const data = {
       description,
       city: selectedCity,
@@ -27,18 +27,22 @@ function App() {
       number,
     } as Entry;
     if (data.city && data.district && data.description) {
-      fetch("https://deprem.noonlordhost.com/", {
+      const URL = "https://deprem.noonlordhost.com/";
+      const response = await fetch(URL, {
         method: "POST",
+        body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          alert("Mesajınız başarıyla gönderildi!");
-        })
-        .catch((error) => {});
+      });
+      if (response.ok) {
+        setDescription("");
+        setNumber("");
+        setEntries([...entries, data]);
+        alert("Mesajınız başarıyla gönderildi!");
+      } else {
+        alert("Bir hata oluştu!");
+      }
     } else {
       alert("Lütfen tüm alanları doldurunuz");
     }
@@ -62,7 +66,7 @@ function App() {
       <header className="text-center text-slate-200 text-5xl mt-4">
         DEPREM YARDIM
       </header>
-      <form className="flex flex-col items-center mt-4">
+      <div className="flex flex-col items-center mt-4">
         <textarea
           className="w-64 h-24 rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
           placeholder="Mesajınız*"
@@ -128,7 +132,7 @@ function App() {
         >
           Gönder
         </button>
-      </form>
+      </div>
       <div className="flex flex-col items-center mt-4">
         <div className="flex flex-row items-center">
           <div className="flex flex-col">
