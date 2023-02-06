@@ -13,7 +13,7 @@ function App() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [description, setDescription] = useState("");
   const [selectedCity, setSelectedCity] = useState("Adana");
-  const [selectedDistrict, setSelectedDistrict] = useState<string>("");
+  const [selectedDistrict, setSelectedDistrict] = useState<string>("Saimbeyli");
   const [filter, setFilter] = useState({ city: "", district: "" });
   const [number, setNumber] = useState("");
 
@@ -123,6 +123,7 @@ function App() {
           className="w-64 h-10 rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
           type="text"
           value={number}
+          maxLength={11}
           onChange={(e) => setNumber(e.target.value)}
         />
         <button
