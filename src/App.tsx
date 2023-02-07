@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { ILCELER, ILLER } from "./constants";
+
 import { Entry } from "./model";
 import { filterEntries, formatPhoneNumber } from "./utils";
+
 
 function App() {
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -83,11 +85,12 @@ function App() {
       } else {
         countMap.set(city, countMap.get(city) + 1);
       }
-    })
+    });
+
 
     ILLER.sort((il1, il2) => countMap.get(il1.text) > countMap.get(il2.text) ? -1 : 1)
     setCityEntryCountMap(countMap);
-  }
+  };
 
   // get entries from backend
   useEffect(() => {
