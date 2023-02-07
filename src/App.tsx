@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ILCELER, ILLER } from "./constants";
 import { Entry } from "./model";
-import { formatNumber } from "./utils";
+import { filterEntries, formatNumber } from "./utils";
 
 
 
@@ -72,6 +72,7 @@ function App() {
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
         });
+        data = data.map(formatNumber);
         setEntries(data);
         countAndSetEntryCountsForCities(data);
       })
@@ -260,25 +261,7 @@ function App() {
       <div className="grid gap-2 row-gap-5 px-16 py-6 lg:grid-cols-5 sm:row-gap-6 sm:grid-cols-3">
         {entries.length > 0 &&
           entries
-          .map(formatNumber)
-            .filter((entry) => {
-              let predicate = true;
-              
-              if (filter.city !== "" && filter.district === "") {
-                predicate = predicate && (entry.city === filter.city);
-              } else if (filter.city !== "" && filter.district !== "") {
-                predicate = predicate && (
-                  entry.city === filter.city &&
-                  entry.district === filter.district
-                );
-              } 
-              
-              if (filter.search) {
-                const query = [entry.city, entry.district, entry.description, entry.number].join(' ');
-                predicate = predicate && query.toLocaleLowerCase().includes(filter.search.toLocaleLowerCase());
-              }
-              return predicate;
-            })
+            .filter((e) => filterEntries(filter, e))
             .map((entry) => (
               <div
                 className="relative overflow-hidden transition duration-200 transform rounded-xl shadow-lg hover:-translate-y-2 hover:shadow-2x"
@@ -291,14 +274,13 @@ function App() {
                   <p className="mt-2 text-sm font-bold text-slate-300">
                     {entry.city} / {entry.district}
                   </p>
-                  {(entry.number && !entry.number.includes('*')) ?  (
+                  {(entry.number!.length === 10) ?  (
                     <p className="mt-2 text-sm font-bold text-slate-400">
                       Tel: <a href={'tel:+90' + entry.number}>{entry.number}</a>
                     </p>
                   ): (
                     <p className="mt-2 text-sm font-bold text-slate-400">
-                      Tel: {entry.number} <br />
-                      <span className="text-sm">Telefon numarası eksik</span>
+                      Telefon numarası eksik
                     </p>
                   )}
                   <p className="mt-2 text-sm font-bold text-slate-400">
