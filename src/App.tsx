@@ -15,9 +15,9 @@ function App() {
   const [description, setDescription] = useState("");
   const [selectedCity, setSelectedCity] = useState("Adana");
   const [selectedDistrict, setSelectedDistrict] = useState<string>("Saimbeyli");
-  const [filter, setFilter] = useState({ city: "", district: "" });
+  const [filter, setFilter] = useState({ city: "", district: "", search: '' });
   const [number, setNumber] = useState("");
-  const [cityEntryCountMap, setCityEntryCountMap] = useState<Map<String,Number>>()
+  const [cityEntryCountMap, setCityEntryCountMap] = useState<Map<String, Number>>()
 
   async function submitData() {
     const data = {
@@ -39,7 +39,7 @@ function App() {
         setDescription("");
         setNumber("");
         data.createdAt = new Date().toISOString();
-        setEntries([...entries, data]);
+        setEntries([data, ...entries]);
         alert("Mesajınız başarıyla gönderildi!");
       } else {
         alert("Bir hata oluştu!");
@@ -49,20 +49,20 @@ function App() {
     }
   }
 
-  const countAndSetEntryCountsForCities = (entries:Entry[]) => {
+  const countAndSetEntryCountsForCities = (entries: Entry[]) => {
 
     const countMap = new Map();
-    ILLER.forEach(il => countMap.set(il.text,0));
+    ILLER.forEach(il => countMap.set(il.text, 0));
     entries.forEach((entry) => {
       const city = entry.city;
       if (countMap.get(city) === undefined) {
-        countMap.set(city,0);
-      }else {
-        countMap.set(city,countMap.get(city) + 1);
+        countMap.set(city, 0);
+      } else {
+        countMap.set(city, countMap.get(city) + 1);
       }
     })
 
-    ILLER.sort( (il1,il2) => countMap.get(il1.text) > countMap.get(il2.text) ? -1 : 1)
+    ILLER.sort((il1, il2) => countMap.get(il1.text) > countMap.get(il2.text) ? -1 : 1)
     setCityEntryCountMap(countMap);
   }
 
@@ -192,7 +192,7 @@ function App() {
         </a>
       </div>
       <p className="text-center text-slate-500/50 text-sm mt-1">
-        Gönderilen yardım taleplerinin doğruluğundan sorumlu değiliz.Lütfen sadece <span className="font-bold text-slate-500/60">doğruluğuna</span> emin olduğunuz yardım taleplerini gönderiniz. 
+        Gönderilen yardım taleplerinin doğruluğundan sorumlu değiliz.Lütfen sadece <span className="font-bold text-slate-500/60">doğruluğuna</span> emin olduğunuz yardım taleplerini gönderiniz.
         <br />
         Deprem Yardım kişisel verileri depolamaz, yardım edecek ve yardım bekleyen kişiler arasında köprü olmayı amaçlar.
       </p>
@@ -218,7 +218,7 @@ function App() {
               <option value="">Tümü</option>
               {ILLER.map((il) => (
                 <option key={il.key} value={il.text}>
-                  {il.text + " (" +  cityEntryCountMap?.get(il.text) + ")"}
+                  {il.text + " (" + cityEntryCountMap?.get(il.text) + ")"}
                 </option>
               ))}
             </select>
@@ -246,22 +246,42 @@ function App() {
               ))}
             </select>
           </div>
+          <div className="flex flex-col">
+            <label
+              htmlFor="search"
+              className="text-slate-200 text-center mt-2 text-base"
+            >
+              Ara
+            </label>
+            <input className="w-50 h-10 rounded-md border-2 ml-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
+              value={filter.search}
+              placeholder="İsim, telefon, il, ilçe..."
+              onChange={(e) => 
+                setFilter({ ...filter, search: e.target.value })
+              } type="text" />
+          </div>
         </div>
       </div>
       <div className="grid gap-2 row-gap-5 px-16 py-6 lg:grid-cols-5 sm:row-gap-6 sm:grid-cols-3">
         {entries.length > 0 &&
           entries
             .filter((entry) => {
-              if (filter.city === "" && filter.district === "") {
-                return true;
-              } else if (filter.city !== "" && filter.district === "") {
-                return entry.city === filter.city;
+              let predicate = true;
+
+              if (filter.city !== "" && filter.district === "") {
+                predicate = predicate && (entry.city === filter.city);
               } else if (filter.city !== "" && filter.district !== "") {
-                return (
+                predicate = predicate && (
                   entry.city === filter.city &&
                   entry.district === filter.district
                 );
+              } 
+              
+              if (filter.search) {
+                const query = [entry.city, entry.district, entry.description, entry.number ?? ''].join(' ');
+                predicate = predicate && query.toLocaleLowerCase().includes(filter.search.toLocaleLowerCase());
               }
+              return predicate;
             })
             .map((entry) => (
               <div
@@ -277,7 +297,7 @@ function App() {
                   </p>
                   {entry.number && (
                     <p className="mt-2 text-sm font-bold text-slate-400">
-                      Tel: {entry.number}
+                      Tel: <a href={'tel:+90' + entry.number}>{entry.number}</a>
                     </p>
                   )}
                   <p className="mt-2 text-sm font-bold text-slate-400">
