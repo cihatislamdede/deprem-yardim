@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ILCELER, ILLER } from "./constants";
+import { formatPhoneNumber } from "./utils";
 
 type Entry = {
   id: number | string;
@@ -207,7 +208,6 @@ function App() {
           className="w-48 h-10 rounded-md border-2 text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
           type="text"
           value={number}
-          maxLength={11}
           onChange={(e) => setNumber(e.target.value)}
         />
         <button
@@ -256,7 +256,7 @@ function App() {
         Gönderilen Yardım Talepleri
       </p>
       <div className="flex flex-col items-center">
-        <div className="flex flex-row items-center">
+        <div className="flex flex-row items-center md:gap-x-2">
           <div className="flex flex-col">
             <label
               htmlFor="cities"
@@ -303,7 +303,7 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="grid gap-2 row-gap-5 px-16 py-6 lg:grid-cols-5 sm:row-gap-6 sm:grid-cols-3">
+      <div className="grid gap-2 row-gap-5 px-6 md:px-8 py-6 lg:grid-cols-5 sm:row-gap-6 sm:grid-cols-3">
         {entries.length > 0 &&
           entries
             .filter((entry) => {
@@ -332,7 +332,7 @@ function App() {
                   </p>
                   {entry.number && (
                     <p className="mt-2 text-sm font-bold text-slate-400">
-                      Tel: {entry.number}
+                      Tel: {formatPhoneNumber(entry.number) || "-"}
                     </p>
                   )}
                   <p className="mt-2 text-sm font-bold text-slate-400">
