@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { ILCELER, ILLER } from "./constants";
+import { ILCELER, ILLER, IL_EXCEPTIONS } from "./constants";
 
-import { Entry } from "./model";
+import { Entry, UserLocation } from "./model";
 import { filterEntries, formatPhoneNumber } from "./utils";
 
 function App() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [description, setDescription] = useState("");
   const [selectedCity, setSelectedCity] = useState("Hatay");
-  const [selectedDistrict, setSelectedDistrict] = useState<string>("Antakya");
+  const [selectedDistrict, setSelectedDistrict] = useState<string>("Merkez");
   const [filter, setFilter] = useState({ city: "", district: "", search: "" });
   const [number, setNumber] = useState("");
   const [cityEntryCountMap, setCityEntryCountMap] =
@@ -27,12 +27,12 @@ function App() {
     const URL = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`;
     const response = await fetch(URL);
     const data = await response.json();
-    const { address } = data;
-    if (address.province[0] === "I") {
+    const { address } = data as { address: UserLocation };
+    if (
+      address.province[0] === "I" &&
+      IL_EXCEPTIONS.includes(address.province)
+    ) {
       address.province = "İ" + address.province.slice(1);
-    }
-    if (address.town[0] === "I") {
-      address.town = "İ" + address.town.slice(1);
     }
     setSelectedCity(address.province);
     setSelectedDistrict(address.town);
@@ -86,7 +86,6 @@ function App() {
         countMap.set(city, countMap.get(city) + 1);
       }
     });
-
     ILLER.sort((il1, il2) =>
       countMap.get(il1.text) > countMap.get(il2.text) ? -1 : 1
     );
@@ -181,8 +180,8 @@ function App() {
               onChange={(e) => setSelectedDistrict(e.target.value)}
             >
               <option value="">Merkez</option>
-              {ILCELER.filter((ilce) => ilce.il == selectedCity).map((ilce) => (
-                <option key={ilce.ilce_id} value={ilce.ilce}>
+              {ILCELER.filter((ilce) => ilce.il === selectedCity).map((ilce) => (
+                <option key={ilce.ilce} value={ilce.ilce}>
                   {ilce.ilce}
                 </option>
               ))}
@@ -280,9 +279,13 @@ function App() {
             >
               <option value="">Tümü</option>
               {ILLER.map((il) => (
-                <option key={il.key} value={il.text}>
-                  {il.text + " (" + cityEntryCountMap?.get(il.text) + ")"}
-                </option>
+                <>
+                  {cityEntryCountMap?.get(il.text) !== 0 && (
+                    <option key={il.key} value={il.text}>
+                      {il.text + " (" + cityEntryCountMap?.get(il.text) + ")"}
+                    </option>
+                  )}
+                </>
               ))}
             </select>
           </div>
@@ -302,8 +305,8 @@ function App() {
               }
             >
               <option value="">Tümü</option>
-              {ILCELER.filter((ilce) => ilce.il == filter.city).map((ilce) => (
-                <option key={ilce.ilce_id} value={ilce.ilce}>
+              {ILCELER.filter((ilce) => ilce.il === filter.city).map((ilce) => (
+                <option key={ilce.ilce} value={ilce.ilce}>
                   {ilce.ilce}
                 </option>
               ))}
