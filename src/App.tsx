@@ -4,7 +4,6 @@ import { ILCELER, ILLER } from "./constants";
 import { Entry } from "./model";
 import { filterEntries, formatPhoneNumber } from "./utils";
 
-
 function App() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [description, setDescription] = useState("");
@@ -12,7 +11,8 @@ function App() {
   const [selectedDistrict, setSelectedDistrict] = useState<string>("Antakya");
   const [filter, setFilter] = useState({ city: "", district: "", search: "" });
   const [number, setNumber] = useState("");
-  const [cityEntryCountMap, setCityEntryCountMap] = useState<Map<String, Number>>()
+  const [cityEntryCountMap, setCityEntryCountMap] =
+    useState<Map<String, Number>>();
 
   async function useLocation() {
     if (navigator.geolocation) {
@@ -87,8 +87,9 @@ function App() {
       }
     });
 
-
-    ILLER.sort((il1, il2) => countMap.get(il1.text) > countMap.get(il2.text) ? -1 : 1)
+    ILLER.sort((il1, il2) =>
+      countMap.get(il1.text) > countMap.get(il2.text) ? -1 : 1
+    );
     setCityEntryCountMap(countMap);
   };
 
@@ -248,6 +249,21 @@ function App() {
         Gönderilen Yardım Talepleri
       </p>
       <div className="flex flex-col items-center">
+        <div className="flex flex-col">
+          <label
+            htmlFor="search"
+            className="text-slate-200 text-center mt-2 text-base"
+          >
+            Ara
+          </label>
+          <input
+            className="w-48 h-10 rounded-md border-2 ml-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
+            value={filter.search}
+            placeholder="İsim, telefon, il, ilçe..."
+            onChange={(e) => setFilter({ ...filter, search: e.target.value })}
+            type="text"
+          />
+        </div>
         <div className="flex flex-row items-center md:gap-x-2">
           <div className="flex flex-col">
             <label
@@ -292,20 +308,6 @@ function App() {
                 </option>
               ))}
             </select>
-          </div>
-          <div className="flex flex-col">
-            <label
-              htmlFor="search"
-              className="text-slate-200 text-center mt-2 text-base"
-            >
-              Ara
-            </label>
-            <input className="w-50 h-10 rounded-md border-2 ml-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
-              value={filter.search}
-              placeholder="İsim, telefon, il, ilçe..."
-              onChange={(e) =>
-                setFilter({ ...filter, search: e.target.value })
-              } type="text" />
           </div>
         </div>
       </div>
