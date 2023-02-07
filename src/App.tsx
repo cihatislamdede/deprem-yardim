@@ -1,25 +1,18 @@
 import { useEffect, useState } from "react";
 import { ILCELER, ILLER } from "./constants";
-import { formatPhoneNumber } from "./utils";
 
-type Entry = {
-  id: number | string;
-  description: string;
-  city: string;
-  district: string;
-  number?: string;
-  createdAt: string;
-};
+import { Entry } from "./model";
+import { filterEntries, formatPhoneNumber } from "./utils";
+
 
 function App() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [description, setDescription] = useState("");
   const [selectedCity, setSelectedCity] = useState("Hatay");
   const [selectedDistrict, setSelectedDistrict] = useState<string>("Antakya");
-  const [filter, setFilter] = useState({ city: "", district: "" });
+  const [filter, setFilter] = useState({ city: "", district: "", search: "" });
   const [number, setNumber] = useState("");
-  const [cityEntryCountMap, setCityEntryCountMap] =
-    useState<Map<String, Number>>();
+  const [cityEntryCountMap, setCityEntryCountMap] = useState<Map<String, Number>>()
 
   async function useLocation() {
     if (navigator.geolocation) {
@@ -94,9 +87,8 @@ function App() {
       }
     });
 
-    ILLER.sort((il1, il2) =>
-      countMap.get(il1.text) > countMap.get(il2.text) ? -1 : 1
-    );
+
+    ILLER.sort((il1, il2) => countMap.get(il1.text) > countMap.get(il2.text) ? -1 : 1)
     setCityEntryCountMap(countMap);
   };
 
@@ -301,23 +293,26 @@ function App() {
               ))}
             </select>
           </div>
+          <div className="flex flex-col">
+            <label
+              htmlFor="search"
+              className="text-slate-200 text-center mt-2 text-base"
+            >
+              Ara
+            </label>
+            <input className="w-50 h-10 rounded-md border-2 ml-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
+              value={filter.search}
+              placeholder="İsim, telefon, il, ilçe..."
+              onChange={(e) =>
+                setFilter({ ...filter, search: e.target.value })
+              } type="text" />
+          </div>
         </div>
       </div>
       <div className="grid gap-2 row-gap-5 px-6 md:px-8 py-6 lg:grid-cols-5 sm:row-gap-6 sm:grid-cols-3">
         {entries.length > 0 &&
           entries
-            .filter((entry) => {
-              if (filter.city === "" && filter.district === "") {
-                return true;
-              } else if (filter.city !== "" && filter.district === "") {
-                return entry.city === filter.city;
-              } else if (filter.city !== "" && filter.district !== "") {
-                return (
-                  entry.city === filter.city &&
-                  entry.district === filter.district
-                );
-              }
-            })
+            .filter((e) => filterEntries(filter, e))
             .map((entry) => (
               <div
                 className="relative overflow-hidden transition duration-200 transform rounded-xl shadow-lg hover:-translate-y-2 hover:shadow-2x"
