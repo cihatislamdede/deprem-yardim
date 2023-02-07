@@ -8,19 +8,48 @@ import { filterEntries, formatNumber } from "./utils";
 function App() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [description, setDescription] = useState("");
-  const [selectedCity, setSelectedCity] = useState("Adana");
-  const [selectedDistrict, setSelectedDistrict] = useState<string>("Saimbeyli");
+  const [selectedCity, setSelectedCity] = useState("Hatay");
+  const [selectedDistrict, setSelectedDistrict] = useState<string>("Antakya");
   const [filter, setFilter] = useState({ city: "", district: "", search: '' });
   const [number, setNumber] = useState("");
   const [cityEntryCountMap, setCityEntryCountMap] = useState<Map<String, Number>>()
 
+  async function useLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+      alert("Tarayıcınız konum bilgisini desteklemiyor");
+    }
+  }
+
+  async function success(position: GeolocationPosition) {
+    const { latitude, longitude } = position.coords;
+    const URL = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`;
+    const response = await fetch(URL);
+    const data = await response.json();
+    const { address } = data;
+    if (address.province[0] === "I") {
+      address.province = "İ" + address.province.slice(1);
+    }
+    if (address.town[0] === "I") {
+      address.town = "İ" + address.town.slice(1);
+    }
+    setSelectedCity(address.province);
+    setSelectedDistrict(address.town);
+  }
+
+  async function error() {
+    alert("Konum bilgisi alınamadı. Konum izinlerinizi kontrol edin.");
+  }
+
   async function submitData() {
-    const data = {
+    var data = {
       description,
       city: selectedCity,
       district: selectedDistrict,
       number,
     } as Entry;
+
     if (data.city && data.district && data.description) {
       const URL = "https://deprem.noonlordhost.com/";
       const response = await fetch(URL, {
@@ -33,6 +62,8 @@ function App() {
       if (response.ok) {
         setDescription("");
         setNumber("");
+        setSelectedCity("Hatay");
+        setSelectedDistrict("Antakya");
         data.createdAt = new Date().toISOString();
         setEntries([data, ...entries]);
         alert("Mesajınız başarıyla gönderildi!");
@@ -45,7 +76,7 @@ function App() {
   }
 
   const countAndSetEntryCountsForCities = (entries: Entry[]) => {
-
+    
     const countMap = new Map();
     ILLER.forEach(il => countMap.set(il.text, 0));
     entries.forEach((entry) => {
@@ -108,60 +139,73 @@ function App() {
           maxLength={280}
           rows={4}
         />
-        <label
-          htmlFor="cities"
-          className="text-slate-200 text-center mt-2 text-base"
+        <button
+          onClick={useLocation}
+          className="w-40 h-10 font-semibold rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black mt-4  placeholder:text-center placeholder:text-slate-200 hover:scale-95 transition"
         >
-          İl*
-        </label>
-        <select
-          id="countries"
-          className=" w-64 h-10 rounded-md border-2 text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
-          value={selectedCity}
-          onChange={(e) => setSelectedCity(e.target.value)}
-        >
-          {ILLER.map((il) => (
-            <option key={il.key} value={il.text}>
-              {il.text}
-            </option>
-          ))}
-        </select>
-        <label
-          htmlFor="districts"
-          className="text-slate-200 text-center mt-2 text-base"
-        >
-          İlçe*
-        </label>
-        <select
-          id="districts"
-          className=" w-64 h-10 rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
-          value={selectedDistrict}
-          onChange={(e) => setSelectedDistrict(e.target.value)}
-        >
-          <option value="">Merkez</option>
-          {ILCELER.filter((ilce) => ilce.il == selectedCity).map((ilce) => (
-            <option key={ilce.ilce_id} value={ilce.ilce}>
-              {ilce.ilce}
-            </option>
-          ))}
-        </select>
+          Konumumu kullan
+        </button>
+        <span className="flex-shrink mx-4 text-gray-400 py-1">ya da</span>
+        <div className="flex flex-col md:flex-row items-center gap-x-2">
+          <div className="flex flex-col">
+            <label
+              htmlFor="cities"
+              className="text-slate-200 text-center text-base"
+            >
+              İl*
+            </label>
+            <select
+              id="countries"
+              className=" w-48 h-10 rounded-md border-2 text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
+              value={selectedCity}
+              onChange={(e) => setSelectedCity(e.target.value)}
+            >
+              {ILLER.map((il) => (
+                <option key={il.key} value={il.text}>
+                  {il.text}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col">
+            <label
+              htmlFor="districts"
+              className="text-slate-200 text-center text-base"
+            >
+              İlçe*
+            </label>
+            <select
+              id="districts"
+              className=" w-48 h-10 rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
+              value={selectedDistrict}
+              onChange={(e) => setSelectedDistrict(e.target.value)}
+            >
+              <option value="">Merkez</option>
+              {ILCELER.filter((ilce) => ilce.il == selectedCity).map((ilce) => (
+                <option key={ilce.ilce_id} value={ilce.ilce}>
+                  {ilce.ilce}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
         <label
           htmlFor="number"
-          className="text-slate-200 text-center mt-2 text-base"
+          className="text-slate-200 text-center mt-2 md:mt-4 text-base"
         >
           İletişim
         </label>
         <input
           id="number"
           placeholder="53..."
-          className="w-64 h-10 rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
+          className="w-48 h-10 rounded-md border-2 text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
           type="text"
           value={number}
           maxLength={11}
           onChange={(e) => setNumber(e.target.value)}
         />
         <button
-          className="w-40 h-10 font-bold rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black mt-4  placeholder:text-center placeholder:text-slate-200 hover:scale-95 transition"
+          className="w-40 h-10 font-bold rounded-md text-center text-primary-black bg-primary-green mt-4  placeholder:text-center placeholder:text-slate-200 hover:scale-95 transition"
           onClick={submitData}
         >
           Gönder
@@ -172,25 +216,34 @@ function App() {
           href="https://www.turkiye.gov.tr/afet-ve-acil-durum-yonetimi-acil-toplanma-alani-sorgulama"
           target="_blank"
           rel="noreferrer"
-          className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
+          className="text-slate-200 text-center text-sm md:text-base hover:text-slate-500 transition underline"
         >
-          Acil Durum
-          <br />
           Toplanma Alanları
         </a>
         <a
           href="https://www.afad.gov.tr/depremkampanyasi2"
           target="_blank"
           rel="noreferrer"
-          className="text-slate-200 text-center text-base hover:text-slate-500 transition underline"
+          className="text-slate-200 text-center text-sm md:text-base hover:text-slate-500 transition underline"
         >
           AFAD Bağış
         </a>
+        <a
+          href="https://ahbap.org/bagisci-ol"
+          target="_blank"
+          rel="noreferrer"
+          className="text-slate-200 text-center text-sm md:text-base hover:text-slate-500 transition underline"
+        >
+          Ahbap Bağış
+        </a>
       </div>
-      <p className="text-center text-slate-500/50 text-sm mt-1">
-        Gönderilen yardım taleplerinin doğruluğundan sorumlu değiliz.Lütfen sadece <span className="font-bold text-slate-500/60">doğruluğuna</span> emin olduğunuz yardım taleplerini gönderiniz.
+      <p className="text-center text-slate-500/50 text-sm mt-1 px-2">
+        Gönderilen yardım taleplerinin doğruluğundan sorumlu değiliz.Lütfen
+        sadece <span className="font-bold text-slate-500/60">doğruluğuna</span>{" "}
+        emin olduğunuz yardım taleplerini gönderiniz.
         <br />
-        Deprem Yardım kişisel verileri depolamaz, yardım edecek ve yardım bekleyen kişiler arasında köprü olmayı amaçlar.
+        Deprem Yardım kişisel verileri depolamaz, yardım edecek ve yardım
+        bekleyen kişiler arasında köprü olmayı amaçlar.
       </p>
       <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
       <p className="text-slate-200 font-semibold text-center text-2xl">
