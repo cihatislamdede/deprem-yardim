@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ILCELER, ILLER, IL_EXCEPTIONS } from "./constants";
 
 import { Entry, UserLocation } from "./model";
@@ -6,7 +6,7 @@ import { filterEntries, formatPhoneNumber } from "./utils";
 
 function App() {
   const [entries, setEntries] = useState<Entry[]>([]);
-  const [description, setDescription] = useState("");
+  const description = useRef<HTMLTextAreaElement | null>(null);
   const [selectedCity, setSelectedCity] = useState("Hatay");
   const [selectedDistrict, setSelectedDistrict] = useState<string>("Merkez");
   const [filter, setFilter] = useState({ city: "", district: "", search: "" });
@@ -43,35 +43,37 @@ function App() {
   }
 
   async function submitData() {
+    if (!description.current?.value) return alert("Lütfen bir mesaj giriniz");
+
+    if (!selectedCity) return alert("Lütfen bir şehir seçiniz");
+
+    if (!selectedDistrict) return alert("Lütfen bir ilçe seçiniz");
+
     var data = {
-      description,
+      description: description.current?.value,
       city: selectedCity,
       district: selectedDistrict,
       number,
     } as Entry;
 
-    if (data.city && data.district && data.description) {
-      const URL = "https://deprem.noonlordhost.com/";
-      const response = await fetch(URL, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.ok) {
-        setDescription("");
-        setNumber("");
-        setSelectedCity("Hatay");
-        setSelectedDistrict("Antakya");
-        data.createdAt = new Date().toISOString();
-        setEntries([data, ...entries]);
-        alert("Mesajınız başarıyla gönderildi!");
-      } else {
-        alert("Bir hata oluştu!");
-      }
+    const URL = "https://deprem.noonlordhost.com/";
+    const response = await fetch(URL, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      description.current!.value = "";
+      setNumber("");
+      setSelectedCity("Hatay");
+      setSelectedDistrict("Antakya");
+      data.createdAt = new Date().toISOString();
+      setEntries([data, ...entries]);
+      alert("Mesajınız başarıyla gönderildi!");
     } else {
-      alert("Lütfen tüm alanları doldurunuz");
+      alert("Bir hata oluştu!");
     }
   }
 
@@ -133,8 +135,7 @@ function App() {
         <textarea
           className="w-64 h-24 rounded-md border-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
           placeholder="Mesajınız*"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          ref={description}
           maxLength={280}
           rows={4}
         />
@@ -180,11 +181,13 @@ function App() {
               onChange={(e) => setSelectedDistrict(e.target.value)}
             >
               <option value="">Merkez</option>
-              {ILCELER.filter((ilce) => ilce.il === selectedCity).map((ilce) => (
-                <option key={ilce.ilce} value={ilce.ilce}>
-                  {ilce.ilce}
-                </option>
-              ))}
+              {ILCELER.filter((ilce) => ilce.il === selectedCity).map(
+                (ilce) => (
+                  <option key={ilce.ilce} value={ilce.ilce}>
+                    {ilce.ilce}
+                  </option>
+                )
+              )}
             </select>
           </div>
         </div>
