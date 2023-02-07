@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import { ILCELER, ILLER } from "./constants";
 import { Entry } from "./model";
-import { filterEntries, formatNumber } from "./utils";
-
-
+import { filterEntries, formatPhoneNumber } from "./utils";
 
 function App() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [description, setDescription] = useState("");
   const [selectedCity, setSelectedCity] = useState("Hatay");
   const [selectedDistrict, setSelectedDistrict] = useState<string>("Antakya");
-  const [filter, setFilter] = useState({ city: "", district: "", search: '' });
+  const [filter, setFilter] = useState({ city: "", district: "", search: "" });
   const [number, setNumber] = useState("");
   const [cityEntryCountMap, setCityEntryCountMap] = useState<Map<String, Number>>()
 
@@ -76,9 +74,8 @@ function App() {
   }
 
   const countAndSetEntryCountsForCities = (entries: Entry[]) => {
-    
     const countMap = new Map();
-    ILLER.forEach(il => countMap.set(il.text, 0));
+    ILLER.forEach((il) => countMap.set(il.text, 0));
     entries.forEach((entry) => {
       const city = entry.city;
       if (countMap.get(city) === undefined) {
@@ -103,7 +100,6 @@ function App() {
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
         });
-        data = data.map(formatNumber);
         setEntries(data);
         countAndSetEntryCountsForCities(data);
       })
@@ -201,7 +197,6 @@ function App() {
           className="w-48 h-10 rounded-md border-2 text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
           type="text"
           value={number}
-          maxLength={11}
           onChange={(e) => setNumber(e.target.value)}
         />
         <button
@@ -250,7 +245,7 @@ function App() {
         Gönderilen Yardım Talepleri
       </p>
       <div className="flex flex-col items-center">
-        <div className="flex flex-row items-center">
+        <div className="flex flex-row items-center md:gap-x-2">
           <div className="flex flex-col">
             <label
               htmlFor="cities"
@@ -305,13 +300,13 @@ function App() {
             <input className="w-50 h-10 rounded-md border-2 ml-2  text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
               value={filter.search}
               placeholder="İsim, telefon, il, ilçe..."
-              onChange={(e) => 
+              onChange={(e) =>
                 setFilter({ ...filter, search: e.target.value })
               } type="text" />
           </div>
         </div>
       </div>
-      <div className="grid gap-2 row-gap-5 px-16 py-6 lg:grid-cols-5 sm:row-gap-6 sm:grid-cols-3">
+      <div className="grid gap-2 row-gap-5 px-6 md:px-8 py-6 lg:grid-cols-5 sm:row-gap-6 sm:grid-cols-3">
         {entries.length > 0 &&
           entries
             .filter((e) => filterEntries(filter, e))
@@ -327,13 +322,9 @@ function App() {
                   <p className="mt-2 text-sm font-bold text-slate-300">
                     {entry.city} / {entry.district}
                   </p>
-                  {(entry.number!.length === 10) ?  (
+                  {entry.number && (
                     <p className="mt-2 text-sm font-bold text-slate-400">
-                      Tel: <a href={'tel:+90' + entry.number}>{entry.number}</a>
-                    </p>
-                  ): (
-                    <p className="mt-2 text-sm font-bold text-slate-400">
-                      Telefon numarası eksik
+                      Tel: {formatPhoneNumber(entry.number) || "-"}
                     </p>
                   )}
                   <p className="mt-2 text-sm font-bold text-slate-400">

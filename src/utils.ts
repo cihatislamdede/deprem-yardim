@@ -1,20 +1,4 @@
 import { Entry } from "./model";
-function formatNumber(entry: Entry): Entry {
-    let number = !entry.number ? 'bilinmiyor' : entry.number ;
-    if(number == 'bilinmiyor'){
-        return entry;
-    }
-    entry.number = fixNumber(number);
-    return entry;
-}
-
-function fixNumber(number:string): string {
-    number = number!.replaceAll(' ', '');
-    if (number.startsWith('0')) {
-        number = number.substring(1, number.length);
-    }
-    return number;
-}
 
 function filterEntries(filter: { city: string, district: string, search: string }, entry: Entry): boolean {
     let predicate = true;
@@ -33,7 +17,28 @@ function filterEntries(filter: { city: string, district: string, search: string 
     }
     return predicate;
 }
+
+// format telephone number to (xxx) xxx-xxxx
+function formatPhoneNumber(phoneNumber: string) {
+    phoneNumber = phoneNumber.replace(/[- )(]/g, "");
+    if (phoneNumber[0] === "+") {
+        phoneNumber = phoneNumber.substring(3);
+    }
+    if (phoneNumber[0] === "0") {
+        phoneNumber = phoneNumber.substring(1);
+    }
+    const cleaned = ("" + phoneNumber).replace(/\D/g, "");
+    const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+    if (match === null) {
+        console.log(phoneNumber, cleaned, match);
+    }
+    if (match) {
+        return "(" + match[1] + ") " + match[2] + "-" + match[3];
+    }
+    return null;
+}
+
 export {
-    formatNumber,
+    formatPhoneNumber,
     filterEntries
 }
