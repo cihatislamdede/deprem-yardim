@@ -22,7 +22,7 @@ function App() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, error);
     } else {
-      console.log("Tarayıcınız konum bilgisini desteklemiyor");
+      alert("Tarayıcınız konum bilgisini desteklemiyor");
     }
   };
 
