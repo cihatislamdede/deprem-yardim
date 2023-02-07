@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
 import { ILCELER, ILLER } from "./constants";
+import { Entry } from "./model";
+import { formatNumber } from "./utils";
 
-type Entry = {
-  id: number | string;
-  description: string;
-  city: string;
-  district: string;
-  number?: string;
-  createdAt: string;
-};
+
 
 function App() {
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -265,9 +260,10 @@ function App() {
       <div className="grid gap-2 row-gap-5 px-16 py-6 lg:grid-cols-5 sm:row-gap-6 sm:grid-cols-3">
         {entries.length > 0 &&
           entries
+          .map(formatNumber)
             .filter((entry) => {
               let predicate = true;
-
+              
               if (filter.city !== "" && filter.district === "") {
                 predicate = predicate && (entry.city === filter.city);
               } else if (filter.city !== "" && filter.district !== "") {
@@ -278,7 +274,7 @@ function App() {
               } 
               
               if (filter.search) {
-                const query = [entry.city, entry.district, entry.description, entry.number ?? ''].join(' ');
+                const query = [entry.city, entry.district, entry.description, entry.number].join(' ');
                 predicate = predicate && query.toLocaleLowerCase().includes(filter.search.toLocaleLowerCase());
               }
               return predicate;
@@ -295,9 +291,14 @@ function App() {
                   <p className="mt-2 text-sm font-bold text-slate-300">
                     {entry.city} / {entry.district}
                   </p>
-                  {entry.number && (
+                  {(entry.number && !entry.number.includes('*')) ?  (
                     <p className="mt-2 text-sm font-bold text-slate-400">
                       Tel: <a href={'tel:+90' + entry.number}>{entry.number}</a>
+                    </p>
+                  ): (
+                    <p className="mt-2 text-sm font-bold text-slate-400">
+                      Tel: {entry.number} <br />
+                      <span className="text-sm">Telefon numarası eksik</span>
                     </p>
                   )}
                   <p className="mt-2 text-sm font-bold text-slate-400">
