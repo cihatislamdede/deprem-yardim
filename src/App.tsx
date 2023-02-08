@@ -35,7 +35,12 @@ function App() {
       address.province = "İ" + address.province.slice(1);
     }
     setSelectedCity(address.province);
-    setSelectedDistrict(address.town);
+
+    if (address.town === undefined) {
+      setSelectedDistrict("Merkez");
+    } else {
+      setSelectedDistrict(address.town);
+    }
   }
 
   async function error() {
@@ -158,7 +163,10 @@ function App() {
               id="countries"
               className=" w-48 h-10 rounded-md border-2 text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
               value={selectedCity}
-              onChange={(e) => setSelectedCity(e.target.value)}
+              onChange={(e) => {
+                setSelectedCity(e.target.value);
+                setSelectedDistrict("Merkez");
+              }}
             >
               {ILLER.map((il) => (
                 <option key={il.key} value={il.text}>
@@ -180,7 +188,7 @@ function App() {
               value={selectedDistrict}
               onChange={(e) => setSelectedDistrict(e.target.value)}
             >
-              <option value="">Merkez</option>
+              <option value="Merkez">Merkez</option>
               {ILCELER.filter((ilce) => ilce.il === selectedCity).map(
                 (ilce) => (
                   <option key={ilce.ilce} value={ilce.ilce}>
