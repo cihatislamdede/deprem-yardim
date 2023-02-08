@@ -28,14 +28,11 @@ function App() {
     const response = await fetch(URL);
     const data = await response.json();
     const { address } = data as { address: UserLocation };
-    if (
-      address.province[0] === "I" &&
-      IL_EXCEPTIONS.includes(address.province)
-    ) {
-      address.province = "İ" + address.province.slice(1);
+    if (Object.keys(IL_EXCEPTIONS).includes(address.province)) {
+      address.province = (IL_EXCEPTIONS as any)[address.province];
     }
     setSelectedCity(address.province);
-
+    console.log(address);
     if (address.town === undefined) {
       setSelectedDistrict("Merkez");
     } else {
@@ -160,7 +157,7 @@ function App() {
               İl*
             </label>
             <select
-              id="countries"
+              id="cities"
               className=" w-48 h-10 rounded-md border-2 text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
               value={selectedCity}
               onChange={(e) => {

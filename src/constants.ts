@@ -3965,12 +3965,12 @@ export const ILCELER = [
   },
 ];
 
-export const IL_EXCEPTIONS = [
-  "Istanbul",
-  "Izmir",
-  "Çanakkale",
-  "Çankırı",
-  "Çorum",
-  "Şanlıurfa",
-  "Şırnak",
-];
+export const IL_EXCEPTIONS = {
+  Istanbul: "İstanbul",
+  Izmir: "İzmir",
+  Canakkale: "Çanakkale",
+  Cankiri: "Çankırı",
+  Corum: "Çorum",
+  Sanliurfa: "Şanlıurfa",
+  Sirnak: "Şırnak",
+};
