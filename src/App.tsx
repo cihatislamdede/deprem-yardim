@@ -43,9 +43,6 @@ function App() {
     }
   }
 
-  console.log(selectedDistrict);
-  console.log(selectedCity);
-
   async function error() {
     alert("Konum bilgisi alınamadı. Konum izinlerinizi kontrol edin.");
   }
