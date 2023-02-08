@@ -3974,3 +3974,5 @@ export const IL_EXCEPTIONS = {
   Sanliurfa: "Şanlıurfa",
   Sirnak: "Şırnak",
 };
+
+export const BACKEND_URL = "https://deprem.noonlordhost.com/";
