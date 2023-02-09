@@ -80,9 +80,13 @@ function App() {
       setSelectedDistrict("Antakya");
       data.createdAt = new Date().toISOString();
       setEntries([data, ...entries]);
-      alert("Mesajınız başarıyla gönderildi!");
-    } else {
-      alert("Bir hata oluştu!");
+      alert("Talebiniz başarıyla gönderildi!");
+    } 
+    else if (response.status === 409){
+      alert("Bu talep daha önce gönderilmiş!");
+    }
+    else {
+      alert("Talebiniz gönderilirken bir hata oluştu!");
     }
   }
 
