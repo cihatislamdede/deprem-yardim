@@ -3977,3 +3977,4 @@ export const IL_EXCEPTIONS = {
 
 export const BACKEND_URL = "https://deprem.noonlordhost.com/";
 export const ENTRY_BATCH_SIZE = 50;
+export const REGEX_PHONE_NUMBER_CLEANER = /[- )(\n\s]/g;
