@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from "react";
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { BACKEND_URL, ILCELER, ILLER, IL_EXCEPTIONS } from "./constants";
 
 import { Entry, UserLocation } from "./model";
 import { filterEntries, formatPhoneNumber } from "./utils";
 
+const ENTRY_BATCH_SIZE = 50;
+
 function App() {
   const [entries, setEntries] = useState<Entry[]>([]);
+  const [entryViewLength, setEntryViewLength] = useState(ENTRY_BATCH_SIZE);
   const description = useRef<HTMLTextAreaElement | null>(null);
   const [selectedCity, setSelectedCity] = useState("Hatay");
   const [selectedDistrict, setSelectedDistrict] = useState<string>("Merkez");
@@ -95,6 +99,10 @@ function App() {
     );
     setCityEntryCountMap(countMap);
   };
+
+  const updateEntryListLength = () => {
+    setEntryViewLength(entryViewLength + ENTRY_BATCH_SIZE);
+  }
 
   // get entries from backend
   useEffect(() => {
@@ -351,41 +359,47 @@ function App() {
           </li>
         </div>
       ) : (
-        <div className="grid gap-2 row-gap-5 px-6 md:px-8 py-6 lg:grid-cols-5 sm:row-gap-6 sm:grid-cols-3">
-          {entries.length > 0 &&
-            entries
-              .filter((e) => filterEntries(filter, e))
-              .map((entry) => (
-                <div
-                  className="relative overflow-hidden transition duration-200 transform rounded-xl shadow-lg hover:-translate-y-2 hover:shadow-2x"
-                  key={entry.id}
-                >
-                  <div className="relative px-4 py-4 bg-black hover:bg-gray-900 transition-all">
-                    <p className="text-sm font-medium text-white">
-                      {entry.description}
-                    </p>
-                    <p className="mt-2 text-sm font-bold text-slate-300">
-                      {entry.city} / {entry.district}
-                    </p>
-                    {entry.number && (
-                      <p className="mt-2 text-sm font-bold text-slate-400">
-                        Tel: {formatPhoneNumber(entry.number) || "-"}
+        <InfiniteScroll
+          loader={null}
+          dataLength={entryViewLength}
+          next={updateEntryListLength}
+          hasMore={entryViewLength < entries.length}
+          className="grid gap-2 row-gap-5 px-6 md:px-8 py-6 lg:grid-cols-5 sm:row-gap-6 sm:grid-cols-3"
+        >
+            {entries.length > 0 &&
+              entries.slice(0, entryViewLength)
+                .filter((e) => filterEntries(filter, e))
+                .map((entry) => (
+                  <div
+                    className="relative overflow-hidden transition duration-200 transform rounded-xl shadow-lg hover:-translate-y-2 hover:shadow-2x"
+                    key={entry.id}
+                  >
+                    <div className="relative px-4 py-4 bg-black hover:bg-gray-900 transition-all">
+                      <p className="text-sm font-medium text-white">
+                        {entry.description}
                       </p>
-                    )}
-                    <p className="mt-2 text-sm font-bold text-slate-400">
-                      {new Date(entry.createdAt).toLocaleString("tr-TR", {
-                        timeZone: "Europe/Istanbul",
-                        hour: "numeric",
-                        minute: "numeric",
-                        day: "numeric",
-                        month: "numeric",
-                        year: "numeric",
-                      })}
-                    </p>
+                      <p className="mt-2 text-sm font-bold text-slate-300">
+                        {entry.city} / {entry.district}
+                      </p>
+                      {entry.number && (
+                        <p className="mt-2 text-sm font-bold text-slate-400">
+                          Tel: {formatPhoneNumber(entry.number) || "-"}
+                        </p>
+                      )}
+                      <p className="mt-2 text-sm font-bold text-slate-400">
+                        {new Date(entry.createdAt).toLocaleString("tr-TR", {
+                          timeZone: "Europe/Istanbul",
+                          hour: "numeric",
+                          minute: "numeric",
+                          day: "numeric",
+                          month: "numeric",
+                          year: "numeric",
+                        })}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
-        </div>
+                ))}
+        </InfiniteScroll>
       )}
     </div>
   );
