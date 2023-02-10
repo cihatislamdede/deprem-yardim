@@ -3975,7 +3975,7 @@ export const IL_EXCEPTIONS = {
   Sirnak: "Şırnak",
 };
 
-export const BACKEND_URL = "https://deprem.noonlordhost.com/";
+export const BACKEND_URL = "https://api.depremyardim.org/";
 export const ENTRY_BATCH_SIZE = 50;
 export const REGEX_PHONE_NUMBER_CLEANER = /[- )(\n\s]/g;
 export const REGEX_PHONE_NUMBER = /(5\d{9})/g;
