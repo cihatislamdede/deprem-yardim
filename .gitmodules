@@ -1,0 +1,3 @@
+[submodule "fe-dev"]
+	path = fe-dev
+	url = https://github.com/cansurmeli/fe-dev.git
