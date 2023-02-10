@@ -379,7 +379,7 @@ function App() {
                       <>
                         {entry.numbersInDesc.map((number, index) =>
                           <p key={index} className="mt-2 text-sm font-bold text-slate-400">
-                            Tel {index + 1}: <a href={'tel:+90' + number}> {formatPhoneNumberView(number)}</a>
+                            Tel {index + (entry.number ? 2 : 1)}: <a href={'tel:+90' + number}> {formatPhoneNumberView(number)}</a>
                           </p>
                         )
                         }
