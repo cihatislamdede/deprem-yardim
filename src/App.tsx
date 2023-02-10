@@ -80,6 +80,7 @@ function App() {
       setSelectedCity("Hatay");
       setSelectedDistrict("Antakya");
       data.createdAt = new Date().toISOString();
+      data.numbersInDesc = findPhoneNumbers(data).numbersInDesc;
       setEntries([data, ...entries]);
       alert("Talebiniz başarıyla gönderildi!");
     }
