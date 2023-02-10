@@ -369,11 +369,9 @@ function App() {
                     <p className="mt-2 text-sm font-bold text-slate-300">
                       {entry.city} / {entry.district}
                     </p>
-                    {isPhoneNumber(entry.number) ?
-                      <PhoneActions number={entry.number!}></PhoneActions> : <div className="text-sm text-slate-100">Telefon numarası yok</div>
-                    }
-                    {entry.numbersInDesc.length > 1 &&
-                      entry.numbersInDesc.map((number, index) => <PhoneActions key={index} number={number}></PhoneActions>)}
+                    {(entry.numbersInDesc.length === 0 && entry.number && isPhoneNumber(entry.number)) &&
+                      <PhoneActions key={entry.number} number={entry.number}></PhoneActions>}
+                    {entry.numbersInDesc.map((number, index) => <PhoneActions key={index} number={number}></PhoneActions>)}
                     <p className="mt-2 text-sm font-bold text-slate-400">
                       {new Date(entry.createdAt).toLocaleString("tr-TR", {
                         timeZone: "Europe/Istanbul",

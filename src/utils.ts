@@ -62,33 +62,12 @@ function _findPhoneNumbers(value: string | undefined): string[] {
   }
   return [];
 }
-function includesMultiplePhoneNumbers(value: string | undefined): boolean {
-  if (!value) return false;
-  const matched = value.match(/(5\d{9})/g);
-  if (matched) {
-    if (matched.length > 1) return true;
-  }
-  return false;
-}
 
 function findPhoneNumbers(entry: Entry): Entry {
-  entry.numbersInDesc = [];
-  if (includesMultiplePhoneNumbers(entry.number)) {
-    entry.numbersInDesc = _findPhoneNumbers(entry.number);
-  }
-  if (includesMultiplePhoneNumbers(entry.description)) {
-    entry.numbersInDesc.push(..._findPhoneNumbers(entry.description))
-  }
+  entry.numbersInDesc = _findPhoneNumbers(entry.number);
+  entry.numbersInDesc.push(..._findPhoneNumbers(entry.description));
   entry.numbersInDesc = Array.from(new Set(entry.numbersInDesc));
-  let desc = entry.number!.replaceAll(REGEX_PHONE_NUMBER_CLEANER, '');
-  const phoneNumbers = desc.match(REGEX_PHONE_NUMBER);
-  if (phoneNumbers) {
-    entry.number = phoneNumbers[0];
-    if (entry.numbersInDesc.indexOf(entry.number || '') > -1) {
-      entry.number = ''
-    }
-  }
   return entry;
 }
 
-export { formatPhoneNumberView, filterEntries, findPhoneNumbers, includesMultiplePhoneNumbers, isPhoneNumber };
+export { formatPhoneNumberView, filterEntries, findPhoneNumbers, isPhoneNumber };
