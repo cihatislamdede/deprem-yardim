@@ -1,4 +1,4 @@
-import { REGEX_PHONE_NUMBER_CLEANER } from "./constants";
+import { REGEX_PHONE_NUMBER, REGEX_PHONE_NUMBER_CLEANER } from "./constants";
 import { Entry } from "./model";
 
 function filterEntries(
@@ -32,6 +32,15 @@ function filterEntries(
 
 // format telephone number to (xxx) xxx-xxxx
 function formatPhoneNumberView(phoneNumber: string) {
+  const isNumber = isPhoneNumber(phoneNumber);
+  if (isNumber && isNumber.length) {
+    return "(" + isNumber[1] + ") " + isNumber[2] + "-" + isNumber[3];
+  }
+  return null;
+}
+
+function isPhoneNumber(phoneNumber: string | undefined) {
+  if (!phoneNumber) return false;
   phoneNumber = phoneNumber.replace(REGEX_PHONE_NUMBER_CLEANER, "");
   if (phoneNumber[0] === "+") {
     phoneNumber = phoneNumber.substring(3);
@@ -41,36 +50,45 @@ function formatPhoneNumberView(phoneNumber: string) {
   }
   const cleaned = ("" + phoneNumber).replace(/\D/g, "");
   const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
-  if (match) {
-    return "(" + match[1] + ") " + match[2] + "-" + match[3];
-  }
-  return null;
+  return match;
 }
 
-function fixPhoneNumber(entry: Entry): Entry {
-  if (entry.number) {
-    entry.number = entry.number.replaceAll(REGEX_PHONE_NUMBER_CLEANER, '');
-    if (entry.number[0] === "+") {
-      entry.number = entry.number.substring(3);
-    }
-    if (entry.number[0] === "0") {
-      entry.number = entry.number.substring(1);
-    }
-  }
-  return entry;
-}
-
-function findPhoneNumbersInDescription(entry: Entry): Entry {
-  const phoneNumberRegex = /(5\d{9})/g;
-  let desc = entry.description.replaceAll(REGEX_PHONE_NUMBER_CLEANER, '');
-  const phoneNumbers = Array.from(new Set(desc.match(phoneNumberRegex)));
+function _findPhoneNumbers(value: string | undefined): string[] {
+  if (!value) return [];
+  let desc = value.replaceAll(REGEX_PHONE_NUMBER_CLEANER, '');
+  const phoneNumbers = desc.match(REGEX_PHONE_NUMBER);
   if (phoneNumbers) {
-    entry.numbersInDesc = phoneNumbers;
+    return Array.from(phoneNumbers);
   }
-  if (entry.number && phoneNumbers.includes(entry.number)) {
-    entry.number = '';
+  return [];
+}
+function includesMultiplePhoneNumbers(value: string | undefined): boolean {
+  if (!value) return false;
+  const matched = value.match(/(5\d{9})/g);
+  if (matched) {
+    if (matched.length > 1) return true;
+  }
+  return false;
+}
+
+function findPhoneNumbers(entry: Entry): Entry {
+  entry.numbersInDesc = [];
+  if (includesMultiplePhoneNumbers(entry.number)) {
+    entry.numbersInDesc = _findPhoneNumbers(entry.number);
+  }
+  if (includesMultiplePhoneNumbers(entry.description)) {
+    entry.numbersInDesc.push(..._findPhoneNumbers(entry.description))
+  }
+  entry.numbersInDesc = Array.from(new Set(entry.numbersInDesc));
+  let desc = entry.number!.replaceAll(REGEX_PHONE_NUMBER_CLEANER, '');
+  const phoneNumbers = desc.match(REGEX_PHONE_NUMBER);
+  if (phoneNumbers) {
+    entry.number = phoneNumbers[0];
+    if (entry.numbersInDesc.indexOf(entry.number || '') > -1) {
+      entry.number = ''
+    }
   }
   return entry;
 }
 
-export { formatPhoneNumberView, filterEntries, findPhoneNumbersInDescription, fixPhoneNumber };
+export { formatPhoneNumberView, filterEntries, findPhoneNumbers, includesMultiplePhoneNumbers, isPhoneNumber };
