@@ -37,6 +37,6 @@ Bilgi teknolojilerini kullanarak ilgili kurum ve STK'lara yardımcı olmak ve af
 	- Projenin kendisi bu dosya içinde yer almaktadır. Yapacağınız geliştirmeler çoğunlukla `App.tsx` dosyasında olacaktır.
 
 ## Katkı Sağlayanlar
-
- - [Cihat İslam Dede](https://github.com/cihatislamdede)
- - [Noonlord](https://github.com/Noonlord)
+<a href="https://github.com/cihatislamdede/deprem-yardim/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=cihatislamdede/deprem-yardim" />
+</a>
