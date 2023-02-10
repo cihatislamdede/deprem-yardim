@@ -5,6 +5,7 @@ export type Entry = {
   district: string;
   number?: string;
   createdAt: string;
+  numbersInDesc: string[];
 };
 
 export type UserLocation = {

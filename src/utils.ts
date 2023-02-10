@@ -1,3 +1,4 @@
+import { REGEX_PHONE_NUMBER_CLEANER } from "./constants";
 import { Entry } from "./model";
 
 function filterEntries(
@@ -20,6 +21,7 @@ function filterEntries(
       entry.district,
       entry.description,
       entry.number,
+      entry.numbersInDesc.join(' ')
     ].join(" ");
     predicate =
       predicate &&
@@ -29,8 +31,8 @@ function filterEntries(
 }
 
 // format telephone number to (xxx) xxx-xxxx
-function formatPhoneNumber(phoneNumber: string) {
-  phoneNumber = phoneNumber.replace(/[- )(]/g, "");
+function formatPhoneNumberView(phoneNumber: string) {
+  phoneNumber = phoneNumber.replace(REGEX_PHONE_NUMBER_CLEANER, "");
   if (phoneNumber[0] === "+") {
     phoneNumber = phoneNumber.substring(3);
   }
@@ -45,4 +47,30 @@ function formatPhoneNumber(phoneNumber: string) {
   return null;
 }
 
-export { formatPhoneNumber, filterEntries };
+function fixPhoneNumber(entry: Entry): Entry {
+  if (entry.number) {
+    entry.number = entry.number.replaceAll(REGEX_PHONE_NUMBER_CLEANER, '');
+    if (entry.number[0] === "+") {
+      entry.number = entry.number.substring(3);
+    }
+    if (entry.number[0] === "0") {
+      entry.number = entry.number.substring(1);
+    }
+  }
+  return entry;
+}
+
+function findPhoneNumbersInDescription(entry: Entry): Entry {
+  const phoneNumberRegex = /(5\d{9})/g;
+  let desc = entry.description.replaceAll(REGEX_PHONE_NUMBER_CLEANER, '');
+  const phoneNumbers = Array.from(new Set(desc.match(phoneNumberRegex)));
+  if (phoneNumbers) {
+    entry.numbersInDesc = phoneNumbers;
+  }
+  if (entry.number && phoneNumbers.includes(entry.number)) {
+    entry.number = '';
+  }
+  return entry;
+}
+
+export { formatPhoneNumberView, filterEntries, findPhoneNumbersInDescription, fixPhoneNumber };

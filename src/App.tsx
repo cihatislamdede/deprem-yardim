@@ -9,7 +9,7 @@ import {
 } from "./constants";
 
 import { Entry, UserLocation } from "./model";
-import { filterEntries, formatPhoneNumber } from "./utils";
+import { filterEntries, formatPhoneNumberView, findPhoneNumbersInDescription, fixPhoneNumber } from "./utils";
 
 function App() {
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -81,8 +81,8 @@ function App() {
       data.createdAt = new Date().toISOString();
       setEntries([data, ...entries]);
       alert("Talebiniz başarıyla gönderildi!");
-    } 
-    else if (response.status === 409){
+    }
+    else if (response.status === 409) {
       alert("Bu talep daha önce gönderilmiş!");
     }
     else {
@@ -115,6 +115,7 @@ function App() {
   useEffect(() => {
     fetch(BACKEND_URL)
       .then((response) => response.json())
+      .then((data) => data = data.map(fixPhoneNumber).map(findPhoneNumbersInDescription))
       .then((data) => {
         data.sort((a: Entry, b: Entry) => {
           return (
@@ -289,6 +290,7 @@ function App() {
             type="text"
           />
         </div>
+
         <div className="flex flex-row items-center md:gap-x-2">
           <div className="flex flex-col">
             <label
@@ -340,10 +342,11 @@ function App() {
           </div>
         </div>
       </div>
+      <p className="text-center text-sm text-slate-100 mt-5">Telefonlara basarak/tıklayarak arama ekranını açabilirsiniz</p>
       {entries.length === 0 ? (
         LoadingComponent()
-      ) : (
-        <InfiniteScroll
+        ) : (
+          <InfiniteScroll
           loader={null}
           dataLength={entryViewLength}
           next={updateEntryListLength}
@@ -368,9 +371,19 @@ function App() {
                     </p>
                     {entry.number && (
                       <p className="mt-2 text-sm font-bold text-slate-400">
-                        Tel: {formatPhoneNumber(entry.number) || "-"}
+                        Tel: <a href={'tel:+90' + entry.number}> {formatPhoneNumberView(entry.number)}</a>
                       </p>
                     )}
+                    {entry.numbersInDesc &&
+                      <>
+                        {entry.numbersInDesc.map((number, index) =>
+                          <p key={index} className="mt-2 text-sm font-bold text-slate-400">
+                            Tel {index + (entry.number ? 2 : 1)}: <a href={'tel:+90' + number}> {formatPhoneNumberView(number)}</a>
+                          </p>
+                        )
+                        }
+                      </>
+                    }
                     <p className="mt-2 text-sm font-bold text-slate-400">
                       {new Date(entry.createdAt).toLocaleString("tr-TR", {
                         timeZone: "Europe/Istanbul",
