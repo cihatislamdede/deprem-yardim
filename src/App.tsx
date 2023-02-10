@@ -222,7 +222,6 @@ function App() {
           placeholder="53..."
           className="w-48 h-10 rounded-md border-2 text-center border-slate-100 text-slate-100 bg-secondary-black  placeholder:text-center placeholder:text-slate-300/40"
           type="text"
-          maxLength={11}
           ref={number}
         />
         <button
