@@ -28,6 +28,14 @@ Bilgi teknolojilerini kullanarak ilgili kurum ve STK'lara yardımcı olmak ve af
 	- 696969 - dim gray
 	- 7A7A7A - gray
 
+## Proje Yapısı
+
+- fe-dev:
+	- Bu dosya içinde Docker ile kurulu bir geliştirme ortamı bulunmaktadır. Eğer Docker kullanıyorsanız `docker-compose up -d` ve sonrasında `docker container exec -it fe-dev zsh` diyerek bütün gereksinimlerin kurulu olduğu ortamda doğrudan kod yazmaya başlayabilirsiniz. **Docker zorunlu değildir.** Projeyi isterseniz kendi ortamınızda da çalıştırabilirsiniz.
+- public
+- src:
+	- Projenin kendisi bu dosya içinde yer almaktadır. Yapacağınız geliştirmeler çoğunlukla `App.tsx` dosyasında olacaktır.
+
 ## Katkı Sağlayanlar
 
  - [Cihat İslam Dede](https://github.com/cihatislamdede)
