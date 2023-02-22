@@ -273,7 +273,7 @@ function App() {
       </p>
       {entries.length !== 0 && (
         <p className="text-center text-sm text-slate-500 italic">
-          {entries.length} yardım talebi
+          {entries.length} yardım talebi (Son 7 gün)
         </p>
       )}
       <div className="flex flex-col items-center">
