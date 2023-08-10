@@ -22,6 +22,7 @@ function App() {
   const [filter, setFilter] = useState({ city: "", district: "", search: "" });
   const [cityEntryCountMap, setCityEntryCountMap] =
     useState<Map<String, Number>>();
+  const [isLoading, setIsLoading] = useState(true);
 
   async function useLocation() {
     if (navigator.geolocation) {
@@ -117,7 +118,7 @@ function App() {
   useEffect(() => {
     fetch(BACKEND_URL)
       .then((response) => response.json())
-      .then((data) => data = data.map(findPhoneNumbers))
+      .then((data) => (data = data.map(findPhoneNumbers)))
       .then((data) => {
         data.sort((a: Entry, b: Entry) => {
           return (
@@ -126,6 +127,7 @@ function App() {
         });
         setEntries(data);
         countAndSetEntryCountsForCities(data);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -344,49 +346,68 @@ function App() {
           </div>
         </div>
       </div>
-      {entries.length === 0 ? (
+      {isLoading ? (
         LoadingComponent()
       ) : (
-        <InfiniteScroll
-          loader={null}
-          dataLength={entryViewLength}
-          next={updateEntryListLength}
-          hasMore={entryViewLength < entries.length}
-          className="grid gap-2 row-gap-5 px-6 md:px-8 py-6 lg:grid-cols-5 sm:row-gap-6 sm:grid-cols-3"
-        >
-          {entries.length > 0 &&
-            entries
-              .slice(0, entryViewLength)
-              .filter((e) => filterEntries(filter, e))
-              .map((entry) => (
-                <div
-                  className="relative overflow-hidden transition duration-200 transform rounded-xl shadow-lg hover:-translate-y-2 hover:shadow-2x"
-                  key={entry.id}
-                >
-                  <div className="relative px-4 py-4 bg-black hover:bg-gray-900 transition-all">
-                    <p className="text-sm font-medium text-white">
-                      {entry.description}
-                    </p>
-                    <p className="mt-2 text-sm font-bold text-slate-300">
-                      {entry.city} / {entry.district}
-                    </p>
-                    {(entry.numbersInDesc.length === 0 && entry.number && isPhoneNumber(entry.number)) &&
-                      <PhoneActions key={entry.number} number={entry.number}></PhoneActions>}
-                    {entry.numbersInDesc.map((number, index) => <PhoneActions key={index} number={number}></PhoneActions>)}
-                    <p className="mt-2 text-sm font-bold text-slate-400">
-                      {new Date(entry.createdAt).toLocaleString("tr-TR", {
-                        timeZone: "Europe/Istanbul",
-                        hour: "numeric",
-                        minute: "numeric",
-                        day: "numeric",
-                        month: "numeric",
-                        year: "numeric",
-                      })}
-                    </p>
-                  </div>
-                </div>
-              ))}
-        </InfiniteScroll>
+        <>
+          {entries.length === 0 ? (
+            <p className="text-center text-slate-200 text-lg mt-4">
+              Yardım talebi bulunamadı.
+            </p>
+          ) : (
+            <InfiniteScroll
+              loader={null}
+              dataLength={entryViewLength}
+              next={updateEntryListLength}
+              hasMore={entryViewLength < entries.length}
+              className="grid gap-2 row-gap-5 px-6 md:px-8 py-6 lg:grid-cols-5 sm:row-gap-6 sm:grid-cols-3"
+            >
+              {entries.length > 0 &&
+                entries
+                  .slice(0, entryViewLength)
+                  .filter((e) => filterEntries(filter, e))
+                  .map((entry) => (
+                    <div
+                      className="relative overflow-hidden transition duration-200 transform rounded-xl shadow-lg hover:-translate-y-2 hover:shadow-2x"
+                      key={entry.id}
+                    >
+                      <div className="relative px-4 py-4 bg-black hover:bg-gray-900 transition-all">
+                        <p className="text-sm font-medium text-white">
+                          {entry.description}
+                        </p>
+                        <p className="mt-2 text-sm font-bold text-slate-300">
+                          {entry.city} / {entry.district}
+                        </p>
+                        {entry.numbersInDesc.length === 0 &&
+                          entry.number &&
+                          isPhoneNumber(entry.number) && (
+                            <PhoneActions
+                              key={entry.number}
+                              number={entry.number}
+                            ></PhoneActions>
+                          )}
+                        {entry.numbersInDesc.map((number, index) => (
+                          <PhoneActions
+                            key={index}
+                            number={number}
+                          ></PhoneActions>
+                        ))}
+                        <p className="mt-2 text-sm font-bold text-slate-400">
+                          {new Date(entry.createdAt).toLocaleString("tr-TR", {
+                            timeZone: "Europe/Istanbul",
+                            hour: "numeric",
+                            minute: "numeric",
+                            day: "numeric",
+                            month: "numeric",
+                            year: "numeric",
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+            </InfiniteScroll>
+          )}
+        </>
       )}
     </div>
   );
