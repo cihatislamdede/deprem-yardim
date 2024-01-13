@@ -84,11 +84,9 @@ function App() {
       data.numbersInDesc = findPhoneNumbers(data).numbersInDesc;
       setEntries([data, ...entries]);
       alert("Talebiniz başarıyla gönderildi!");
-    }
-    else if (response.status === 409) {
+    } else if (response.status === 409) {
       alert("Bu talep daha önce gönderilmiş!");
-    }
-    else {
+    } else {
       alert("Talebiniz gönderilirken bir hata oluştu!");
     }
   }
@@ -115,30 +113,42 @@ function App() {
   };
 
   // get entries from backend
-  useEffect(() => {
-    fetch(BACKEND_URL)
-      .then((response) => response.json())
-      .then((data) => (data = data.map(findPhoneNumbers)))
-      .then((data) => {
-        data.sort((a: Entry, b: Entry) => {
-          return (
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-        });
-        setEntries(data);
-        countAndSetEntryCountsForCities(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch(BACKEND_URL)
+  //     .then((response) => response.json())
+  //     .then((data) => (data = data.map(findPhoneNumbers)))
+  //     .then((data) => {
+  //       data.sort((a: Entry, b: Entry) => {
+  //         return (
+  //           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  //         );
+  //       });
+  //       setEntries(data);
+  //       countAndSetEntryCountsForCities(data);
+  //       setIsLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //     });
+  // }, []);
 
   return (
     <div className="flex flex-col min-h-screen bg-secondary-black font-roboto">
-      <header className="text-center text-slate-200 text-5xl mt-4">
+      <a className="text-center text-slate-200 text-5xl mt-4" href="/">
         DEPREM YARDIM
-      </header>
+      </a>
+      <p className="text-center text-slate-200 text-lg mt-4">
+        Bu site arşivlenmiştir. Kaybedilen canlarımıza Allah'tan rahmet
+        diliyoruz.
+        <br />
+        Umarız hiçbir zaman ihtiyaç duymayız.
+      </p>
+      <img
+        src="https://www.afad.gov.tr/kurumlar/afad.gov.tr/24212/pics/image-9ced40a1b1844.png?c=3250"
+        alt="deprem"
+        className="h-64 md:h-96 mx-auto mt-4 px-2"
+      />
+      {/*
       <p className="text-slate-200 text-center text-base">
         <a
           href="https://github.com/cihatislamdede/deprem-yardim"
@@ -409,6 +419,7 @@ function App() {
           )}
         </>
       )}
+      */}
     </div>
   );
 
