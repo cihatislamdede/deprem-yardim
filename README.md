@@ -2,6 +2,8 @@
 
 Twitter, Instagram, WhatsApp ve çeşitli web sitelerinde paylaşılan yardım çağrılarının düzenli bir şekilde paylaşılabilmesi için bir platform.
 
+> <h1>Bu proje arşivlenmiştir. Kaybedilen canlarımıza Allah'tan rahmet diliyoruz. Umarız hiçbir zaman ihtiyaç duymayız.</h1>
+
 ## Amaç
 
 Bilgi teknolojilerini kullanarak ilgili kurum ve STK'lara yardımcı olmak ve afet zamanlarında açık bir veri platformu sağlamak.
